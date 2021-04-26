@@ -7,3 +7,9 @@ To scale up the dynamic-NMF for the size of the US congressional record, we turn
 
 
 - Greene, D., & Cross, J. (2017). Exploring the Political Agenda of the European Parliament Using a Dynamic Topic Modeling Approach. Political Analysis, 25(1), 77-94. https://www.jstor.org/stable/26563293
+
+
+## Repository Content:
+- containers: Docker containers for bring your own algorithm in AWS
+- notebooks: jupyter notebooks for testing
+- data: sample data for testing
