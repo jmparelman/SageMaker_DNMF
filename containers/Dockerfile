@@ -8,7 +8,7 @@ FROM python:3.7-slim-buster
 MAINTAINER ASC "mbod@asc.upenn.edu jmparelman@gmail.com"
 
 # setup working directory
-RUN mkdir -p /data/input /data/output /working
+RUN mkdir -p /opt/ml/processing/input /opt/ml/processing/output /working
 
 # install OS modules - especially Python
 RUN apt-get -y update && apt-get install -y --no-install-recommends \
@@ -30,7 +30,7 @@ RUN \
     && python3 -m spacy download en_core_web_sm
 
 
-WORKDIR /working
+#WORKDIR /working
 
 ENV PYTHONUNBUFFERED=TRUE
 
