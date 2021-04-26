@@ -5,7 +5,7 @@
 #### HISTORY
 
 * 4/25/21 mbod - initial setup and testing
-
+* 4/26/21 jmp - modified phrase removal functionality to accept a list of phrases in `speech.processor.process_speeches` instead of a json passed to `speech.processor` instance.
 ----
 
 ### Notes
