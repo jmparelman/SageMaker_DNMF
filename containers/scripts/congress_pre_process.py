@@ -231,13 +231,12 @@ def main(path, chamber, out_path, wc=50, start_date=None, end_date = None,
     processor.save_speeches_dtm(out_path,filename)
 
 if __name__ == '__main__':
-    parser = OptionParser(usage="usage: %prog [options] path chamber out_path")
+    parser = OptionParser(usage="usage: %prog [options] chamber")
     parser.add_option('--wc',action='store',type='int',dest='wc',default=50)
     parser.add_option('--sd',action='store',type='string',dest='start_date',default=None)
     parser.add_option('--ed',action='store',type='string',dest='end_date',default=None)
     parser.add_option('--o',action='store',type='string',dest='omit_path',default=None)
     parser.add_option('--nmin',action='store',type='int',dest='ngram_min_df',default=50)
-    parser.add_option('--nt',action='store',type='int',dest='ngram_thresh',default=10)
     parser.add_option('--nt',action='store',type='int',dest='ngram_thresh',default=10)
     parser.add_option('--b',action='store',type='int',dest='batch_size',default=20)
     parser.add_option('--mindf',action='store',type='int',dest='dtm_min_df',default=30)
@@ -245,7 +244,9 @@ if __name__ == '__main__':
     parser.add_option('--f',action='store',type='string',dest='filename',default=None)
     parser.add_option('--t',action='store_true', dest='testing')
     (options,args) = parser.parse_args()
-    path, chamber, out_path = args
+    path = '/opt/ml/processing/input'
+    out_path = '/opt/ml/processing/output'
+    chamber = args[0]
 
     main(path,chamber,out_path,options.wc, options.start_date,
         options.end_date,options.ngram_min_df,options.ngram_thresh,options.batch_size,
