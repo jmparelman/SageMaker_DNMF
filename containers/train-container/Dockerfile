@@ -30,4 +30,6 @@ WORKDIR /working
 
 ENV PYTHONUNBUFFERED=TRUE
 
-ENTRYPOINT ["python3"]
+COPY scripts/run_nmf.py /opt/ml/run_nmf.py
+
+ENTRYPOINT ["python3", "/opt/ml/run_nmf.py"]
