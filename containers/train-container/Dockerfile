@@ -8,7 +8,7 @@ FROM python:3.7-slim-buster
 MAINTAINER ASC "mbod@asc.upenn.edu jmparelman@gmail.com"
 
 # setup working directory
-RUN mkdir -p /data/input /data/output /working
+RUN mkdir -p /data/input /data/output
 
 # install OS modules - especially Python
 RUN apt-get -y update && apt-get install -y --no-install-recommends \
@@ -24,9 +24,6 @@ RUN \
          json \
          joblib \
          sklearn
-
-
-WORKDIR /working
 
 ENV PYTHONUNBUFFERED=TRUE
 
