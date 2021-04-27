@@ -1,6 +1,5 @@
-import joblib, os, json
+import joblib, os, json, argparse
 from sklearn import decomposition
-from optparse import OptionParser
 
 base_path = '/opt/ml/train'
 input_path = os.path.join(base_path,'input')
@@ -15,14 +14,14 @@ def train(X,k,max_iter=300,random_state=1234):
     return W,H,model
 
 if __name__ == "__main__":
-    parser = OptionParser(usage="usage: %prog [options] chamber")
-    parser.add_option('--miter',action='store',type='int', dest='max_iter')
-    parser.add_option('--r',action='store',type='int', dest='random_state',default=1234)
-    (options,args) = parser.parse_args()
-    chamber = args[0]
-
-    dtm_dict = joblib.load(os.path.join(input_path,f'{chamber}.pkl'))
+    parser = argparse.ArgumentParser(description='run NMF training')
+    parser.add_argument('chamber',type=int,help='chamber of congress to train on')
+    parser.add_argument('-m','--max_iter',help='maximum NMF iterations',type=int,default=300)
+    parser.add_argument('-r','random_state',help='random state for NMF',type=int,default=1234)
+    args = parser.parse_args()
+    
+    dtm_dict = joblib.load(os.path.join(input_path,f'{args.chamber}.pkl'))
     dtm = dtm_dict['dtm']
 
-    W,H,model = train(dtm,k,options.max_iter,options.random_state)
-    joblib.dump({"W":W,"H":H,"model":model},os.path.join(output_path,f'{chamber}.pkl'))
+    W,H,model = train(dtm,k,args.max_iter,args.random_state)
+    joblib.dump({"W":W,"H":H,"model":model},os.path.join(output_path,f'{args.chamber}.pkl'))
