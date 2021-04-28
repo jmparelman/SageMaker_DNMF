@@ -34,6 +34,7 @@ def train():
     H = model.components_
     model_dict = {"W":W,'H':H,"model":model}
     
+    print("coherence: 1")
     with open(os.path.join(model_path,f'NMF_{chamber}_{k}.pkl'),'wb') as out:
         joblib.dump(model_dict,out)
 
