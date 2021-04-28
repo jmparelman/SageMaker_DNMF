@@ -21,12 +21,13 @@ RUN apt-get -y update && apt-get install -y --no-install-recommends \
 # install Python packages using pip install
 RUN \
     pip3 install -U pandas \
-         json \
          joblib \
          sklearn
 
 ENV PYTHONUNBUFFERED=TRUE
+ENV PYTHONDONTWRITEBYTECODE=TRUE
+ENV PATH="/opt/ml:${PATH}"
 
 COPY scripts/run_nmf.py /opt/ml/run_nmf.py
 
-ENTRYPOINT ["python3", "/opt/ml/run_nmf.py"]
+ENTRYPOINT ["python3","/opt/ml/run_nmf.py"]

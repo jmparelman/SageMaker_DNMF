@@ -1,27 +1,41 @@
 import joblib, os, json, argparse
 from sklearn import decomposition
 
-base_path = '/opt/ml/train'
-input_path = os.path.join(base_path,'input')
+base_path = '/opt/ml/'
+input_path = os.path.join(base_path,'input/data')
 output_path = os.path.join(base_path,'output')
-hyperparameters = json.load(os.path.join(base_path,'input/data','hyperparameters.json'))
-k = hyperparameters['k']
+model_path = os.path.join(base_path,'model')
+with open(os.path.join(base_path,'input/config/hyperparameters.json')) as F:
+    trainingParams = json.load(F)
 
-def train(X,k,max_iter=300,random_state=1234):
-    model = decomposition.NMF(n_components=k,init='nndsvd',max_iter=max_iter,random_state=random_state)
+channel = 'training'
+training_path = os.path.join(input_path,channel)
+
+def train():
+    
+    # get K and convert to int
+    k = trainingParams.get('k',None)
+    if k is not None:
+        k = int(k)
+    else:
+        k = 50
+    
+    # read in the data, should be a single .pkl file
+    training_file = os.listdir(training_path)[0]
+    input_dict = joblib.load(os.path.join(training_path,training_file))
+    X = input_dict['dtm']
+    
+    # get the chamber name
+    chamber = training_file.split('.')[0]
+    
+    # fit model
+    model = decomposition.NMF(n_components=k,init='nndsvd',max_iter=200,random_state=1234)
     W = model.fit_transform(X)
     H = model.components_
-    return W,H,model
+    model_dict = {"W":W,'H':H,"model":model}
+    
+    with open(os.path.join(model_path,f'NMF_{chamber}_{k}.pkl'),'wb') as out:
+        joblib.dump(model_dict,out)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='run NMF training')
-    parser.add_argument('chamber',type=int,help='chamber of congress to train on')
-    parser.add_argument('-m','--max_iter',help='maximum NMF iterations',type=int,default=300)
-    parser.add_argument('-r','random_state',help='random state for NMF',type=int,default=1234)
-    args = parser.parse_args()
-    
-    dtm_dict = joblib.load(os.path.join(input_path,f'{args.chamber}.pkl'))
-    dtm = dtm_dict['dtm']
-
-    W,H,model = train(dtm,k,args.max_iter,args.random_state)
-    joblib.dump({"W":W,"H":H,"model":model},os.path.join(output_path,f'{args.chamber}.pkl'))
+    train()
