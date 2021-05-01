@@ -88,16 +88,26 @@ class speech_processor():
         """
 
         # load in speeches
-        speeches = open(os.path.join(self.path,f"speeches_{self.chamber}.txt"),
+        speeches = open(os.path.join(self.path,'speeches',f"speeches_{self.chamber}.txt"),
                         encoding='utf-8',
                         errors='ignore').read().split('\n')
-        speeches = {row[:10]:row[11:].strip() for row in speeches}
+        #speeches = {row[:10]:row[11:].strip() for row in speeches}
+        #speeches = dict([row.strip().split('|') for row in speeches])
 
+        speeches = { row[:row.index('|')]:row.strip()[row.index('|')+1:] for row in speeches if row.count('|')>0 }
+        
+        
+        print(f'{len(speeches)} speeches in speeches_{self.chamber}.txt')
+        
         # get description file processed
-        congress = open(os.path.join(self.path,f"descr_{self.chamber}.txt"),
+        congress = open(os.path.join(self.path,'descr',f"descr_{self.chamber}.txt"),
                          encoding='utf-8',
                          errors='ignore').read()
         rows = [r.split("|") for r in congress.split('\n')[1:-1]]
+                 
+        print(f'{len(rows)} rows in descr_{self.chamber}.txt')
+
+                 
         columns = congress.split('\n')[0].split('|')
         df = pd.DataFrame(rows, columns=columns)
 
@@ -147,7 +157,7 @@ class speech_processor():
         text_phrased = [remove_phrases(speech,omit_tokens) for speech in tqdm(text_normalized,desc="omitting phrases")]
 
         # tokenize
-        text_tokenized = list(nlp.pipe(text_phrased,batch_size=batch_size))
+        text_tokenized = list(nlp.pipe(text_phrased,batch_size=batch_size, n_process=-1))
         text_tokens = [POS_select(speech) for speech in tqdm(text_tokenized)]
 
         bigrams = Phrases(text_tokens, min_count=min_df, threshold=threshold)
@@ -238,14 +248,15 @@ if __name__ == '__main__':
     parser.add_option('--o',action='store',type='string',dest='omit_path',default=None)
     parser.add_option('--nmin',action='store',type='int',dest='ngram_min_df',default=50)
     parser.add_option('--nt',action='store',type='int',dest='ngram_thresh',default=10)
-    parser.add_option('--nt',action='store',type='int',dest='ngram_thresh',default=10)
     parser.add_option('--b',action='store',type='int',dest='batch_size',default=20)
     parser.add_option('--mindf',action='store',type='int',dest='dtm_min_df',default=30)
     parser.add_option('--maxdf',action='store',type='float',dest='dtm_max_df',default=.3)
     parser.add_option('--f',action='store',type='string',dest='filename',default=None)
     parser.add_option('--t',action='store_true', dest='testing')
     (options,args) = parser.parse_args()
-    path, chamber, out_path = args
+    path = '/opt/ml/processing/input'
+    out_path = '/opt/ml/processing/output'
+    chamber = args[0]
 
     main(path,chamber,out_path,options.wc, options.start_date,
         options.end_date,options.ngram_min_df,options.ngram_thresh,options.batch_size,
