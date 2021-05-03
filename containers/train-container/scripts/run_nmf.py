@@ -7,7 +7,7 @@ import time
 base_path = '/opt/ml/'
 input_path = os.path.join(base_path,'input/data')
 output_path = os.path.join(base_path,'output')
-model_path = os.path.join(base_path,'model')
+
 
 
 training_path = os.path.join(input_path,'training')
@@ -21,7 +21,7 @@ speech_id = input_dict['speech_id']
 
 # get the chamber name
 chamber = training_file.split('.')[0]
-
+model_path = os.path.join(base_path,f'model_{chamber}')
 
 def run_model(k):
     print(f'{k}.k starting')
