@@ -124,6 +124,7 @@ class speech_processor():
 
         # filter data
         self.df = df.loc[(df.gender != "Special") &
+                        (df.chamber != 'E') &
                         (df.gender != 'Unknown') &
                         (df.word_count.astype(int) >= wc) &
                         (df.speech_text.apply(omit_senate_special_language))]
@@ -245,11 +246,11 @@ if __name__ == '__main__':
     parser.add_option('--wc',action='store',type='int',dest='wc',default=50)
     parser.add_option('--sd',action='store',type='string',dest='start_date',default=None)
     parser.add_option('--ed',action='store',type='string',dest='end_date',default=None)
-    parser.add_option('--o',action='store',type='string',dest='omit_path',default=None)
+    parser.add_option('--o',action='store',type='string',dest='omit_path',default='/opt/ml/input/omit_phrases.csv')
     parser.add_option('--nmin',action='store',type='int',dest='ngram_min_df',default=50)
     parser.add_option('--nt',action='store',type='int',dest='ngram_thresh',default=10)
     parser.add_option('--b',action='store',type='int',dest='batch_size',default=20)
-    parser.add_option('--mindf',action='store',type='int',dest='dtm_min_df',default=30)
+    parser.add_option('--mindf',action='store',type='int',dest='dtm_min_df',default=50)
     parser.add_option('--maxdf',action='store',type='float',dest='dtm_max_df',default=.3)
     parser.add_option('--f',action='store',type='string',dest='filename',default=None)
     parser.add_option('--t',action='store_true', dest='testing')

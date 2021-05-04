@@ -29,7 +29,7 @@ RUN \
 
 # setup working directory
 RUN mkdir -p /opt/ml/processing/input/speeches /opt/ml/processing/input/descr /opt/ml/processing/output
-
+COPY data/omit_phrases.csv /opt/ml/input/omit_phrases.csv
 
 ENV PYTHONUNBUFFERED=TRUE
 
