@@ -158,7 +158,8 @@ class speech_processor():
         text_phrased = [remove_phrases(speech,omit_tokens) for speech in tqdm(text_normalized,desc="omitting phrases")]
 
         # tokenize
-        text_tokenized = list(nlp.pipe(text_phrased,batch_size=batch_size, n_process=-1))
+        text_tokenized = nlp.pipe(text_phrased,batch_size=batch_size, n_process=4)
+        print('text spacyfied')
         text_tokens = [POS_select(speech) for speech in tqdm(text_tokenized)]
 
         bigrams = Phrases(text_tokens, min_count=min_df, threshold=threshold)
