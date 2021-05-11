@@ -38,4 +38,4 @@ def run_model(k):
 if __name__ == "__main__":
     # Uses m1.m4.16xlarge instance for multiprocessing (k = 40-100)
     with Pool(64) as p:
-        p.map(run_model,range(22,101))
+        p.map(run_model,range(20,150,5))
