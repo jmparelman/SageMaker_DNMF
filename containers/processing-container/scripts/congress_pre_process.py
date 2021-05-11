@@ -162,10 +162,12 @@ class speech_processor():
         print('text spacyfied')
         text_tokens = [POS_select(speech) for speech in tqdm(text_tokenized)]
 
-        bigrams = Phrases(text_tokens, min_count=min_df, threshold=threshold)
-        speech_ngrams = [bigrams[sent] for sent in text_tokens]
-        # rejoin
-        self.df['speech_processed'] = [' '.join(speech) for speech in speech_ngrams]
+#         bigrams = Phrases(text_tokens, min_count=min_df, threshold=threshold)
+#         speech_ngrams = [bigrams[sent] for sent in text_tokens]
+        
+#         # rejoin
+#         self.df['speech_processed'] = [' '.join(speech) for speech in speech_ngrams]
+        self.df['speech_processed'] = [' '.join(speech) for speech in text_tokens]
 
 
     def make_dtm(self,min_df=100,max_df=0.3):
